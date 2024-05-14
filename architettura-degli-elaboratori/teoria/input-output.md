@@ -1,0 +1,12 @@
+# Esercitazione I/O
+- Interrupt: eccezioni che modificano il flusso dell'esecuzione causati da dispositivi hardware esterni
+- Il registro cause (HW) contiene il codice dell'eccezione
+- Il registro status consente di abilitare il processore alla comunicazione su certe linee
+    - Se una periferica ha una linea con interrupt abilitata nello status register, la comunicazione sarà percepita dal processore, altrimenti no => campo interrupt mask
+    - Consente quindi di abilitare/disabilitare periferiche
+- In SPIM ci sono due periferiche: leggere caratteri da tastiera e digitare caratteri
+- Il terminale è quindi formato da:
+    - Receiver: legge i caratteri dalla tastiera
+    - Transmitter: visualizza i caratteri sulla console
+- N.B. le due unità sono <b>indipendenti</b>: se voglio vedere cosa scrivo lo devo fare separatamente
+- Nei data register, gli ultimi 8 bit contengono i dati scritti da tastiera/da mostrare a schermo
