@@ -199,6 +199,93 @@ def SBT_insert(T, x):
 T(h) = O(h)
 
 ### Cancellazione
-1. Il nodo è una foglia: basta rimuovere il collegamento con il parent
-2. Il nodo ha un solo figlio: sotto ci può essere tanta roba, quindi devo collegare i noti sotto con il parent del nodo eliminato => devo fare contrazione, cioè collegare il parent del nodo rimosso con il figlio (tempo costante)
-3. Il nodo ha due figli: è un casino, sostituisco il nodo con il suo predecessore/successore
+N.B. Per cancellazione si intende voler cancellare il nodo di cui viene dato il <b>puntatore</b> (non il valore)
+1. Il nodo è una foglia:
+    - Rimuovo il collegamento con il padre (rimuovo il puntatore)
+    - Mettere a null l'elemento per liberare memoria
+2. Il nodo ha un solo figlio: ha un sottoalbero sinistro (valori più piccoli di lui) o destro (valori più grandi di lui)
+    - I nodi che stanno al di sotto del nodo da rimuovere non devono essere cambiati, devo solo sostituire quel nodo collegando il padre del nodo da rimuovere con il figlio del nodo da rimuovere
+3. Il nodo ha due figli: non posso collegare i figli direttamente al padre, perché il padre avrebbe tre figli (non va bene, l'albero deve essere binario di ricerca!)
+    - Al posto del nodo da rimuovere metto un nuovo nodo (che mantiene le stesse proprietà) => successore o predecessore
+    - Il successore è il più piccolo dei nodi del sottoalbero destro del nodo da rimuovere, il predecessore è invece il massimo dei nodi del sottoalbero sinistro
+    - Il procedimento è: 
+        a. Cerco il nodo che non ha figli sinistri (nel sottoalbero sinistro o destro, in base a se voglio avere il sucessore o il predecessore)
+        b. Scambio il valore trovato con quello da eliminare
+        c. Cancello il nodo che è diventato figlio (contrazione)
+
+``` python
+def SBT_Delete(x: pointer):                 # Non mi serve il puntatore all'albero
+    if x.left == None and x.right == None:
+        # Il nodo da rimuovere è una foglia
+        p = x.parent
+        if (x.key < p.key):
+            p.left = None
+        else:
+            p.right = None
+        free(x)                             # Libero la memoria occupata dal nodo
+        x = None
+    else if x.left == None or x.righe == None:
+        # Il nodo ha un solo figlio
+        if x.parent.left == x:
+            # Il nodo da eliminare è nel sottoalbero sinistro
+            if x.left != None:
+                # E' figlio sinistro e ha un figlio sinistro
+                x.parent.left = x.left
+                x.parent.left.parent = x.parent
+            else:
+                x.parent.left = x.right
+                x.parent.left.parent = x.parent
+        else:
+            # Il nodo da eliminare è nel sottoalbero destro
+            if x.left != None:
+                # E' figlio sinistro e ha un figlio sinistro
+                x.parent.right = x.left
+                x.parent.right.parent = x.parent
+            else:
+                x.parent.right = x.right
+                x.parent.right.parent = x.parent
+        free(x)
+        x = None
+    else:
+        # Il nodo ha due figli
+        p = SBT_Succ(x)
+        x.key = p.key
+        SBT_Delete(p)
+```
+- T(n) = O(h) => se bilanciato T(n) = O(logn)
+- N.B. inserendo o cancellando un nodo in un albero si sta sbilanciando: ci sono algoritmi che bilanciano gli alberi (es. rotazione) che fanno rimanere il tempo logn
+
+### Inserimento
+``` python
+def SBT_Insert(T, x):
+    if x == None:
+        return
+    p1 = Root[t]
+    p2 = None
+    while p1 != None:
+        p2 = p1
+        if key(x) <= key(p1):
+            p1 = left(p1)
+    if x <= x.parent.left:
+        p2.left = x
+    else:
+        p2.right = x
+    x.parent = p2
+```
+
+T(n) = 4c + 4Twi
+- Caso migliore: i nodi sono tutti a sinistra, ma io voglio inserirlo a destra: Tm(n) = Omega(1)
+- Caso peggiore: scendo fino all'ultimo livello: Tp(n) = 4c + 4ch = O(h) (se è bilanciato, h=logn) => tempo logaritmico
+
+### Esercizio
+- Dati i numeri 10, 75, 30, 42, 47, 81, 31, 76, 53 mostrare cosa succede nel costruire un albero binario di ricerca
+
+
+                10   ->       10      ->   10     ->   10  ->  [...] ->      10       -> [...]
+                             /  \            \        /  \                    \
+                                75           75          75                   75                                               \              \         /                  /    \
+                                               30       30                  30    81
+                                                                              \
+                                                                              42
+                                                                               \
+                                                                               47
