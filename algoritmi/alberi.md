@@ -277,7 +277,7 @@ T(n) = 4c + 4Twi
 - Caso migliore: i nodi sono tutti a sinistra, ma io voglio inserirlo a destra: Tm(n) = Omega(1)
 - Caso peggiore: scendo fino all'ultimo livello: Tp(n) = 4c + 4ch = O(h) (se è bilanciato, h=logn) => tempo logaritmico
 
-### Esercizio
+### Costruire albero
 - Dati i numeri 10, 75, 30, 42, 47, 81, 31, 76, 53 mostrare cosa succede nel costruire un albero binario di ricerca
 
 
@@ -289,3 +289,72 @@ T(n) = 4c + 4Twi
                                                                               42
                                                                                \
                                                                                47
+
+### Esercizio ricerca divide et impera
+- Si consideri un albero binario che contiene valori interi; si considerino due valori n1 e n2
+- Scrivere una procedura di tipo divide et impera che conta quanti elementi dell'albero binario sono compresi tra n1 e n2
+- Controllo se la radice è compresa; il risutato è radice compresa + n_sinistra + n_destra
+
+``` python
+def Conta(x: pointer, n1: int, n2: int) -> int:
+    if x == None:
+        return 0
+    else:
+        r = 0
+        if x.key >= n1 and x.key <= n2:
+            r += 1
+        r1 = Conta(x.left, n1, n2)
+        r2 = Conta(x.right, n1, n2)
+        return r + r1 + r2
+```
+
+T(n) se l'albero è sbilanciato tutto a sinistra/destra
+    - 2c se n=0
+    - 5c + T(n-1) T(0) 
+
+T(n) se l'albero è bilanciato
+    - 2x se n=0
+    - 5c + T(n/2)
+
+- Nel caso di albero binario di ricerca, posso ignorare i valori a sinistra o destra se la radice è più piccola di n1 o più grande di n2 (migliora solo il caso migliore e medio)
+
+### Eliminare occorrenze di un valore da ABR
+- Struttura dell'albero: il minore uguale è a sinistra, la delete prende il predecessore
+    - Individuo il nodo da cancellare, cancello, controllo se il nodo nuovo ha la stessa chiave (e lo cancello)
+
+``` python
+def ABR_del(Root[t], k: int):
+    p = SBT_search(Root[t], k)
+    while p != None and p.key == k:
+        if p.left == None and p.right == None:
+            # Il nodo da cancellare è una foglia
+            SBT_delete(p)
+            p = None
+        else:
+            SBT_delete(p)
+            p = SBT_search(p, k)
+        SBT_delete(p)
+```
+
+### Stampare chiavi in modo ordinato
+- Array ordinato
+
+``` python
+def Union(T: pointer, V: list):
+    Pt = SBT_min(T)
+    Iv = 1;
+    while Pt != None and Iv <= length(V):
+        if Pt.key <= V[Iv]:
+            print(Pt.key)
+            Pt = SBT_successor(Pt)
+        else:
+            print(V[Iv])
+            Iv += 1
+    while Pt != None:
+        print(Pt.key)
+        Pt = SBT_successor(Pt)
+    while Iv <= length(V):
+        print(V[Iv])
+        Iv += 1
+```
+T(n) = Teta(nlogn)
