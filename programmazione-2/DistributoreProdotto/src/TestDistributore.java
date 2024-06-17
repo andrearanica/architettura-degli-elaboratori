@@ -2,15 +2,18 @@ import static org.junit.Assert.*;
 
 import java.util.HashSet;
 
+import org.junit.Test;
 
-public class Test {
+public class TestDistributore {
 
+	@Test
 	public void testProdottoQuantitaNegativa() {
 		Toast t = new Toast(3, false, -2);
 		assertEquals(3, t.getPrezzoUnitario());
 		assertEquals(0, t.getQuantita());
 	}
 
+	@Test
 	public void testProdottoPiccolo() {
 		Toast t = new Toast(3, false, 2);
 		assertEquals(3, t.getPrezzoUnitario());
@@ -20,6 +23,7 @@ public class Test {
 		assertEquals(1, t.getQuantita());
 	}
 
+	@Test
 	public void testProdottoGrande() {
 		Toast t = new Toast(3, true, 2);
 		assertEquals(6, t.getPrezzoUnitario());
@@ -29,6 +33,7 @@ public class Test {
 		assertEquals(1, t.getQuantita());
 	}
 
+	@Test
 	public void testCreazioneDistributore() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
@@ -60,6 +65,7 @@ public class Test {
 		}
 	}
 
+	@Test
 	public void testIncrementaQuantitaProdotto() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
@@ -93,6 +99,7 @@ public class Test {
 		}
 	}
 
+	@Test
 	public void testAcquista() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
@@ -118,6 +125,7 @@ public class Test {
 		}
 	}
 
+	@Test
 	public void testAcquistaValoreInsufficiente() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
@@ -137,6 +145,7 @@ public class Test {
 		}
 	}
 
+	@Test
 	public void testAcquistaPosizioneNonValida() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
@@ -158,6 +167,7 @@ public class Test {
 		}
 	}
 
+	@Test
 	public void testQuantitaInsufficiente() {
 		HashSet<Prodotto> prodotti = new HashSet<Prodotto>();
 
